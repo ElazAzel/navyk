@@ -1,101 +1,63 @@
-# Деплой проекта Navyk на Vercel
+# Деплой проекта NAVYK на Vercel
 
-Этот документ содержит инструкции по деплою проекта на платформу Vercel.
+Этот документ содержит пошаговые инструкции по деплою проекта NAVYK на платформу Vercel.
 
 ## Предварительные требования
 
-1. Аккаунт на [Vercel](https://vercel.com)
-2. Репозиторий проекта на GitHub, GitLab или Bitbucket
-3. Node.js версии 18 или выше
+1. Аккаунт на [GitHub](https://github.com)
+2. Аккаунт на [Vercel](https://vercel.com)
+3. Доступ к репозиторию [https://github.com/ElazAzel/navyk](https://github.com/ElazAzel/navyk)
 
-## Шаги для деплоя
+## Шаги по деплою
 
-### 1. Настройка переменных окружения
+### 1. Подготовка репозитория
 
-Перед деплоем необходимо настроить следующие переменные окружения в Vercel:
+Репозиторий уже настроен для деплоя на Vercel. Основные файлы конфигурации:
+- `vercel.json` - настройки для Vercel
+- `next.config.js` - настройки Next.js для работы с Vercel
 
-```
-CLIENT_URL=https://navyk.kz
-JWT_SECRET=your_secure_jwt_secret_for_production
-ML_SERVICE_URL=https://ml-api.navyk.kz
-NEXT_PUBLIC_SITE_URL=https://navyk.kz
-NEXT_PUBLIC_JWT_SECRET=your_secure_jwt_secret_for_production
-NEXT_PUBLIC_SOCKET_URL=https://api.navyk.kz
-```
+### 2. Деплой на Vercel
 
-> **Важно**: Для `JWT_SECRET` и `NEXT_PUBLIC_JWT_SECRET` обязательно используйте надежные случайные значения в продакшене.
-
-### 2. Деплой через Vercel Dashboard
-
-1. Войдите в [Vercel Dashboard](https://vercel.com/dashboard)
-2. Нажмите "Add New" -> "Project"
-3. Выберите репозиторий с проектом
-4. Настройте параметры проекта:
-   - Framework Preset: Next.js
-   - Root Directory: ./
-   - Build Command: npm run build
-   - Output Directory: .next
-5. Добавьте переменные окружения в разделе "Environment Variables"
+1. Войдите в свой аккаунт на [Vercel](https://vercel.com)
+2. Нажмите кнопку "Add New..." и выберите "Project"
+3. Выберите "Import Git Repository" и подключите свой GitHub аккаунт, если это еще не сделано
+4. Найдите и выберите репозиторий `ElazAzel/navyk`
+5. На странице настройки проекта:
+   - Имя проекта: `navyk` (или другое по вашему выбору)
+   - Framework Preset: `Next.js` (должен определиться автоматически)
+   - Root Directory: `./` (оставьте по умолчанию)
+   - Build Command: `npm run build` (оставьте по умолчанию)
+   - Output Directory: `.next` (оставьте по умолчанию)
+   - Environment Variables: добавьте необходимые переменные окружения (если требуется)
 6. Нажмите "Deploy"
 
-### 3. Деплой через Vercel CLI
+### 3. Настройка домена (опционально)
 
-Alternatively you can deploy using the Vercel CLI:
+1. После успешного деплоя перейдите в настройки проекта
+2. Выберите вкладку "Domains"
+3. Добавьте свой домен и следуйте инструкциям по настройке DNS
 
-1. Установите Vercel CLI:
-   ```
-   npm install -g vercel
-   ```
+### 4. Настройка CI/CD
 
-2. Войдите в аккаунт Vercel:
-   ```
-   vercel login
-   ```
+Vercel автоматически настраивает CI/CD для вашего проекта:
+- При каждом пуше в ветку `master` будет выполняться новый деплой
+- Для пулл-реквестов будут создаваться превью-деплои
 
-3. Настройте проект (в корневой директории проекта):
-   ```
-   vercel
-   ```
+## Проверка деплоя
 
-4. Следуйте инструкциям для настройки проекта
-5. Для продакшен-деплоя используйте:
-   ```
-   vercel --prod
-   ```
+После успешного деплоя вы получите URL вашего проекта (например, `https://navyk.vercel.app`).
+Перейдите по этому URL, чтобы убедиться, что ваш проект работает корректно.
 
-## Особенности архитектуры на Vercel
+## Устранение неполадок
 
-### Realtime функциональность
+Если у вас возникли проблемы с деплоем:
 
-В этом проекте реализована альтернативная реализация для работы с данными в реальном времени:
-
-- Вместо WebSocket используется HTTP long polling через Vercel Serverless функции
-- API маршрут `/api/realtime` обрабатывает запросы данных
-- Хук `useVercelCompatibleRealtime` предоставляет интерфейс, аналогичный Socket.io
-
-### Аутентификация
-
-- Используется аутентификация на основе JWT-токенов
-- Токены хранятся в HttpOnly cookie для большей безопасности
-- Middleware проверяет наличие токена для защищенных маршрутов
-
-## Проверка после деплоя
-
-После деплоя рекомендуется проверить:
-
-1. Корректную работу аутентификации
-2. Функциональность получения данных в реальном времени
-3. Работу защищенных маршрутов
-4. Работу всех API-эндпоинтов
-
-## Известные ограничения
-
-- Vercel не поддерживает WebSockets, поэтому используется long polling
-- Серверный компонент Socket.io не может быть запущен на Vercel
-- Memory-based хранение данных в Serverless-функциях сбрасывается между запросами
+1. Проверьте логи сборки на Vercel
+2. Убедитесь, что все необходимые переменные окружения настроены
+3. Проверьте, что проект успешно собирается локально с помощью команды `npm run build`
 
 ## Дополнительные ресурсы
 
-- [Документация Vercel по деплою Next.js](https://vercel.com/docs/frameworks/nextjs)
-- [Руководство по оптимизации Next.js на Vercel](https://vercel.com/guides/deploying-nextjs-with-vercel)
-- [Настройка кастомных доменов](https://vercel.com/docs/projects/domains/add-a-domain) 
+- [Документация Vercel](https://vercel.com/docs)
+- [Документация Next.js](https://nextjs.org/docs)
+- [Руководство по деплою Next.js на Vercel](https://nextjs.org/docs/deployment) 
