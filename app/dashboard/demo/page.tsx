@@ -47,25 +47,33 @@ export default function DemoPage() {
 
   const handleDemoAccess = (role: string) => {
     setIsLoading(role);
-    
+    console.log(`Начало создания демо-доступа для роли: ${role}`);
+
     // Создаем демо-токен для выбранной роли
     const demoToken = createDemoToken(role);
-    
+    console.log(`Демо-токен создан: ${demoToken.substring(0, 20)}...`);
+
     // Устанавливаем токен в cookie
     setAuthToken(demoToken);
-    
-    // Редирект на соответствующую страницу
+    console.log(`Токен установлен в cookie`);
+
+    // Увеличиваем задержку перед редиректом до 2 секунд
+    console.log(`Ожидание перед перенаправлением...`);
     setTimeout(() => {
+      let redirectUrl = '';
       if (role === 'student') {
-        router.push('/students/profile');
+        redirectUrl = '/students/profile';
       } else if (role === 'employer') {
-        router.push('/employers/dashboard');
+        redirectUrl = '/employers/dashboard';
       } else if (role === 'university') {
-        router.push('/universities/dashboard');
+        redirectUrl = '/universities/dashboard';
       } else if (role === 'mentor') {
-        router.push('/mentors/dashboard');
+        redirectUrl = '/mentors/dashboard';
       }
-    }, 1000);
+      
+      console.log(`Перенаправление на: ${redirectUrl}`);
+      router.push(redirectUrl);
+    }, 2000); // Увеличиваем задержку до 2 секунд
   };
 
   return (

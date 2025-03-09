@@ -105,26 +105,35 @@ export function isTokenValid(token: string | undefined | null): boolean {
  */
 export function isDemoToken(token: string | undefined | null): boolean {
   if (!token) return false;
+  console.log(`isDemoToken: проверка токена (первые 20 символов): ${token.substring(0, 20)}...`);
 
   try {
     // Для демо-токенов мы используем простое кодирование base64
     const decodedData = JSON.parse(atob(token));
+    console.log(`isDemoToken: успешно декодирован токен, проверяем флаг isDemo: ${decodedData.isDemo}`);
 
     // Проверяем, есть ли флаг isDemo и не истек ли срок действия
-    return (
+    const isValid = (
       decodedData.isDemo === true &&
       decodedData.exp &&
       decodedData.exp > Math.floor(Date.now() / 1000)
     );
+    console.log(`isDemoToken: токен ${isValid ? 'валиден' : 'невалиден'} как демо-токен`);
+    return isValid;
   } catch (error) {
     // Если простое декодирование не сработало, пробуем с decodeURIComponent
+    console.log(`isDemoToken: ошибка при декодировании токена: ${error}`);
     try {
       const decodedData = JSON.parse(decodeURIComponent(atob(token)));
-      return (
+      console.log(`isDemoToken: успешно декодирован токен с decodeURIComponent, проверяем флаг isDemo: ${decodedData.isDemo}`);
+      
+      const isValid = (
         decodedData.isDemo === true &&
         decodedData.exp &&
         decodedData.exp > Math.floor(Date.now() / 1000)
       );
+      console.log(`isDemoToken: токен ${isValid ? 'валиден' : 'невалиден'} как демо-токен (с decodeURIComponent)`);
+      return isValid;
     } catch (e) {
       console.error('Ошибка при проверке демо-токена:', error);
       return false;
@@ -137,14 +146,18 @@ export function isDemoToken(token: string | undefined | null): boolean {
  */
 export function getRoleFromDemoToken(token: string | undefined | null): string | null {
   if (!token) return null;
+  console.log(`getRoleFromDemoToken: получение роли из токена`);
 
   try {
     const decodedData = JSON.parse(atob(token));
+    console.log(`getRoleFromDemoToken: успешно декодирован токен, роль: ${decodedData.role || 'не определена'}`);
     return decodedData.role || null;
   } catch (error) {
     // Если простое декодирование не сработало, пробуем с decodeURIComponent
+    console.log(`getRoleFromDemoToken: ошибка при декодировании токена: ${error}`);
     try {
       const decodedData = JSON.parse(decodeURIComponent(atob(token)));
+      console.log(`getRoleFromDemoToken: успешно декодирован токен с decodeURIComponent, роль: ${decodedData.role || 'не определена'}`);
       return decodedData.role || null;
     } catch (e) {
       console.error('Ошибка при получении роли из демо-токена:', error);
