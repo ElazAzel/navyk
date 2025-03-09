@@ -98,4 +98,42 @@ export function isTokenValid(token: string | undefined | null): boolean {
     console.error('Ошибка при проверке токена:', error);
     return false;
   }
+}
+
+/**
+ * Проверяет, является ли токен демо-токеном
+ */
+export function isDemoToken(token: string | undefined | null): boolean {
+  if (!token) return false;
+  
+  try {
+    // Для демо-токенов мы используем простое кодирование base64
+    // вместо полноценного JWT
+    const decodedData = JSON.parse(atob(token));
+    
+    // Проверяем, есть ли флаг isDemo и не истек ли срок действия
+    return (
+      decodedData.isDemo === true && 
+      decodedData.exp && 
+      decodedData.exp > Math.floor(Date.now() / 1000)
+    );
+  } catch (error) {
+    console.error('Ошибка при проверке демо-токена:', error);
+    return false;
+  }
+}
+
+/**
+ * Получает роль из демо-токена
+ */
+export function getRoleFromDemoToken(token: string | undefined | null): string | null {
+  if (!token) return null;
+  
+  try {
+    const decodedData = JSON.parse(atob(token));
+    return decodedData.role || null;
+  } catch (error) {
+    console.error('Ошибка при получении роли из демо-токена:', error);
+    return null;
+  }
 } 
