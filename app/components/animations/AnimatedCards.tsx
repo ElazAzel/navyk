@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode } from "react";
+import React, { ReactNode } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 
@@ -51,6 +51,18 @@ interface AnimatedDemoCardProps {
 }
 
 export function AnimatedDemoCard({ index, icon, title, description, linkUrl, color, features }: AnimatedDemoCardProps) {
+  // Извлекаем роль из URL
+  const getDemoRole = (url: string): string => {
+    if (url.includes('/students/')) return 'student';
+    if (url.includes('/employers/')) return 'employer';
+    if (url.includes('/universities/')) return 'university';
+    if (url.includes('/mentors/')) return 'mentor';
+    return 'student'; // По умолчанию студент
+  };
+
+  // Формируем демо-URL
+  const demoUrl = `/dashboard/demo?role=${getDemoRole(linkUrl)}`;
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
@@ -88,7 +100,7 @@ export function AnimatedDemoCard({ index, icon, title, description, linkUrl, col
         )}
         
         <Link 
-          href={linkUrl} 
+          href={demoUrl} 
           className="inline-block w-full py-2 text-center bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
         >
           Посмотреть демо

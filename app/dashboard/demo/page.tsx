@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
 import Link from "next/link";
 import { UserIcon, AcademicCapIcon, BuildingOfficeIcon } from "@heroicons/react/24/outline";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { setAuthToken } from "../../lib/security/auth-utils";
 
 // Функция для создания демо-токена
@@ -28,7 +28,16 @@ const createDemoToken = (role: string) => {
 
 export default function DemoPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [isLoading, setIsLoading] = useState<string | null>(null);
+
+  // Автоматическое перенаправление, если указан параметр роли
+  useEffect(() => {
+    const role = searchParams.get('role');
+    if (role && ['student', 'employer', 'university', 'mentor'].includes(role)) {
+      handleDemoAccess(role);
+    }
+  }, [searchParams]);
 
   const handleDemoAccess = (role: string) => {
     setIsLoading(role);
@@ -47,6 +56,8 @@ export default function DemoPage() {
         router.push('/employers/dashboard');
       } else if (role === 'university') {
         router.push('/universities/dashboard');
+      } else if (role === 'mentor') {
+        router.push('/mentors/dashboard');
       }
     }, 1000);
   };
