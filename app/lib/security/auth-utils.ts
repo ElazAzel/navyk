@@ -105,16 +105,15 @@ export function isTokenValid(token: string | undefined | null): boolean {
  */
 export function isDemoToken(token: string | undefined | null): boolean {
   if (!token) return false;
-  
+
   try {
     // Для демо-токенов мы используем простое кодирование base64
-    // и encodeURIComponent для поддержки Unicode-символов
-    const decodedData = JSON.parse(decodeURIComponent(atob(token)));
-    
+    const decodedData = JSON.parse(atob(token));
+
     // Проверяем, есть ли флаг isDemo и не истек ли срок действия
     return (
-      decodedData.isDemo === true && 
-      decodedData.exp && 
+      decodedData.isDemo === true &&
+      decodedData.exp &&
       decodedData.exp > Math.floor(Date.now() / 1000)
     );
   } catch (error) {
@@ -128,12 +127,12 @@ export function isDemoToken(token: string | undefined | null): boolean {
  */
 export function getRoleFromDemoToken(token: string | undefined | null): string | null {
   if (!token) return null;
-  
+
   try {
-    const decodedData = JSON.parse(decodeURIComponent(atob(token)));
+    const decodedData = JSON.parse(atob(token));
     return decodedData.role || null;
   } catch (error) {
-    console.error('Ошибка при получении роли из демо-токена:', error);
+    console.error('Ошибка при получении роли из демо-токена:', error); 
     return null;
   }
 } 
