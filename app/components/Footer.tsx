@@ -18,20 +18,20 @@ export default function Footer() {
           <div>
             <h3 className="font-bold text-lg mb-4">Для студентов</h3>
             <ul className="space-y-2 text-sm">
-              <li><Link href="/students/profile" className="hover:underline">Профиль</Link></li>
-              <li><Link href="/students/recommendations" className="hover:underline">Рекомендации</Link></li>
-              <li><Link href="/students/events" className="hover:underline">Мероприятия</Link></li>
-              <li><Link href="/students/courses" className="hover:underline">Курсы</Link></li>
-              <li><Link href="/students/achievements" className="hover:underline">Достижения</Link></li>
+              <li><Link href="/dashboard/demo?role=student" className="hover:underline">Профиль</Link></li>
+              <li><Link href="/dashboard/demo?role=student" className="hover:underline">Рекомендации</Link></li>
+              <li><Link href="/dashboard/demo?role=student" className="hover:underline">Мероприятия</Link></li>
+              <li><Link href="/dashboard/demo?role=student" className="hover:underline">Курсы</Link></li>
+              <li><Link href="/dashboard/demo?role=student" className="hover:underline">Достижения</Link></li>
             </ul>
           </div>
           
           <div>
             <h3 className="font-bold text-lg mb-4">Для партнеров</h3>
             <ul className="space-y-2 text-sm">
-              <li><Link href="/employers/dashboard" className="hover:underline">Работодателям</Link></li>
-              <li><Link href="/universities/dashboard" className="hover:underline">Университетам</Link></li>
-              <li><Link href="/mentors/dashboard" className="hover:underline">Менторам</Link></li>
+              <li><Link href="/dashboard/demo?role=employer" className="hover:underline">Работодателям</Link></li>
+              <li><Link href="/dashboard/demo?role=university" className="hover:underline">Университетам</Link></li>
+              <li><Link href="/dashboard/demo?role=mentor" className="hover:underline">Менторам</Link></li>
             </ul>
           </div>
           
