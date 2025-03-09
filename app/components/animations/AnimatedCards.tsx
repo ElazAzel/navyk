@@ -57,8 +57,8 @@ export function AnimatedDemoCard({ index, icon, title, description, linkUrl, col
       // Определяем роль на основе URL
       const role = getDemoRole(url);
       
-      // Перенаправляем на страницу генерации демо-токена с указанной ролью
-      window.location.href = `/dashboard/demo?role=${role}`;
+      // Перенаправляем на страницу генерации демо-токена с указанной ролью и URL для перенаправления
+      window.location.href = `/dashboard/demo?role=${role}&redirect=${url}`;
     } catch (error) {
       console.error('Ошибка при генерации демо-доступа:', error);
     }

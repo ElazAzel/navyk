@@ -41,12 +41,20 @@ export default function DemoPage() {
   // Автоматическое перенаправление, если указан параметр роли
   useEffect(() => {
     const role = searchParams.get('role');
+    const redirect = searchParams.get('redirect');
+    
     if (role && ['student', 'employer', 'university', 'mentor'].includes(role)) {
-      handleDemoAccess(role);
+      handleDemoAccess(role, redirect);
     }
   }, [searchParams]);
 
-  const getRedirectUrl = (role: string): string => {
+  const getRedirectUrl = (role: string, redirectParam?: string | null): string => {
+    // Если указан параметр redirect, используем его
+    if (redirectParam) {
+      return redirectParam;
+    }
+
+    // Иначе используем стандартное перенаправление по роли
     switch (role) {
       case 'student':
         return '/students/profile';
@@ -61,7 +69,7 @@ export default function DemoPage() {
     }
   };
 
-  const handleDemoAccess = (role: string) => {
+  const handleDemoAccess = (role: string, redirectParam?: string | null) => {
     try {
       setIsLoading(role);
       setError(null);
@@ -76,7 +84,7 @@ export default function DemoPage() {
       console.log(`Токен установлен в cookie`);
 
       // Получаем URL для перенаправления
-      const redirectUrl = getRedirectUrl(role);
+      const redirectUrl = getRedirectUrl(role, redirectParam);
       console.log(`Ожидание перед перенаправлением на ${redirectUrl}...`);
 
       // Увеличиваем задержку перед редиректом до 2 секунд
@@ -136,7 +144,7 @@ export default function DemoPage() {
                 </li>
               </ul>
             </CardContent>
-            <CardFooter>
+            <CardFooter className="flex-col gap-2">
               <Button
                 className="w-full"
                 onClick={() => handleDemoAccess('student')}
@@ -144,6 +152,26 @@ export default function DemoPage() {
               >
                 {isLoading === 'student' ? 'Загрузка...' : 'Войти как студент'}
               </Button>
+              <div className="w-full flex gap-2 text-xs">
+                <Link 
+                  href="/dashboard/demo?role=student&redirect=/students/profile" 
+                  className="flex-1 text-center py-1 px-2 bg-gray-50 dark:bg-gray-800 rounded hover:bg-gray-100 dark:hover:bg-gray-700"
+                >
+                  Профиль
+                </Link>
+                <Link 
+                  href="/dashboard/demo?role=student&redirect=/students/events" 
+                  className="flex-1 text-center py-1 px-2 bg-gray-50 dark:bg-gray-800 rounded hover:bg-gray-100 dark:hover:bg-gray-700"
+                >
+                  Мероприятия
+                </Link>
+                <Link 
+                  href="/dashboard/demo?role=student&redirect=/students/courses" 
+                  className="flex-1 text-center py-1 px-2 bg-gray-50 dark:bg-gray-800 rounded hover:bg-gray-100 dark:hover:bg-gray-700"
+                >
+                  Курсы
+                </Link>
+              </div>
             </CardFooter>
           </Card>
 
