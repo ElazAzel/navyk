@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
 import Link from "next/link";
@@ -32,7 +32,8 @@ const createDemoToken = (role: string) => {
   }
 };
 
-export default function DemoPage() {
+// Компонент-клиент, который использует useSearchParams
+function DemoContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isLoading, setIsLoading] = useState<string | null>(null);
@@ -261,5 +262,14 @@ export default function DemoPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+// Основной компонент страницы
+export default function DemoPage() {
+  return (
+    <Suspense fallback={<div className="container mx-auto px-4 py-16 text-center">Загрузка...</div>}>
+      <DemoContent />
+    </Suspense>
   );
 } 
