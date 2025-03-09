@@ -108,8 +108,8 @@ export function isDemoToken(token: string | undefined | null): boolean {
   
   try {
     // Для демо-токенов мы используем простое кодирование base64
-    // вместо полноценного JWT
-    const decodedData = JSON.parse(atob(token));
+    // и encodeURIComponent для поддержки Unicode-символов
+    const decodedData = JSON.parse(decodeURIComponent(atob(token)));
     
     // Проверяем, есть ли флаг isDemo и не истек ли срок действия
     return (
@@ -130,7 +130,7 @@ export function getRoleFromDemoToken(token: string | undefined | null): string |
   if (!token) return null;
   
   try {
-    const decodedData = JSON.parse(atob(token));
+    const decodedData = JSON.parse(decodeURIComponent(atob(token)));
     return decodedData.role || null;
   } catch (error) {
     console.error('Ошибка при получении роли из демо-токена:', error);

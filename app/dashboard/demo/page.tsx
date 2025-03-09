@@ -22,8 +22,8 @@ const createDemoToken = (role: string) => {
     exp: Math.floor(Date.now() / 1000) + 30 * 60
   };
 
-  // Преобразуем в строку
-  return btoa(JSON.stringify(demoUser));
+  // Преобразуем в строку и кодируем символы Unicode перед конвертацией в base64
+  return btoa(encodeURIComponent(JSON.stringify(demoUser)));
 };
 
 export default function DemoPage() {
