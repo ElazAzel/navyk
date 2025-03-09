@@ -1,13 +1,9 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { PROTECTED_ROUTES, ROUTES } from './lib/routes'
+import { isTokenValid } from './app/lib/security/auth-utils'
 
 export function middleware(request: NextRequest) {
-  // Временно отключаем проверку авторизации для демонстрационных целей
-  return NextResponse.next()
-  
-  // Старая реализация (закомментирована)
-  /*
   // Получаем текущий путь
   const path = request.nextUrl.pathname
 
@@ -21,10 +17,10 @@ export function middleware(request: NextRequest) {
   }
 
   // Получаем токен из куки
-  const token = request.cookies.get('auth-token')?.value
+  const token = request.cookies.get('navyk_auth_token')?.value
 
-  // Если нет токена, редиректим на главную
-  if (!token) {
+  // Если нет токена или токен невалиден, редиректим на главную
+  if (!token || !isTokenValid(token)) {
     const loginUrl = new URL(ROUTES.HOME, request.url)
     return NextResponse.redirect(loginUrl)
   }
@@ -33,7 +29,6 @@ export function middleware(request: NextRequest) {
   // на основе декодированного токена
 
   return NextResponse.next()
-  */
 }
 
 // Конфигурация: указываем, для каких путей срабатывает middleware

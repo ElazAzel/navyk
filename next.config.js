@@ -4,7 +4,7 @@ const nextConfig = {
   // Ensure proper configuration for Vercel deployment
   swcMinify: true,
   images: {
-    domains: [],
+    domains: ["navyk.kz"],
     remotePatterns: []
   }
 }
