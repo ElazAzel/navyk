@@ -13,7 +13,7 @@ const createDemoToken = (role: string) => {
   // Создаем фиктивные данные пользователя
   const demoUser = {
     id: `demo-${role}-${Date.now()}`,
-    name: `Демо ${role === 'student' ? 'студент' : role === 'employer' ? 'работодатель' : 'университет'}`,
+    name: `Demo ${role === 'student' ? 'student' : role === 'employer' ? 'employer' : 'university'}`,
     email: `demo-${role}@navyk.kz`,
     role: role,
     // Специальный флаг, указывающий, что это демо-пользователь
@@ -22,8 +22,14 @@ const createDemoToken = (role: string) => {
     exp: Math.floor(Date.now() / 1000) + 30 * 60
   };
 
-  // Преобразуем в строку и кодируем символы Unicode перед конвертацией в base64
-  return btoa(encodeURIComponent(JSON.stringify(demoUser)));
+  try {
+    // Используем только btoa без дополнительного кодирования
+    return btoa(JSON.stringify(demoUser));
+  } catch (error) {
+    console.error('Ошибка создания демо-токена:', error);
+    // Fallback метод, если btoa не справляется с UTF-8 символами
+    return btoa(unescape(encodeURIComponent(JSON.stringify(demoUser))));
+  }
 };
 
 export default function DemoPage() {

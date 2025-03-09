@@ -108,8 +108,7 @@ export function isDemoToken(token: string | undefined | null): boolean {
 
   try {
     // Для демо-токенов мы используем простое кодирование base64
-    // и encodeURIComponent для поддержки Unicode-символов
-    const decodedData = JSON.parse(decodeURIComponent(atob(token)));
+    const decodedData = JSON.parse(atob(token));
 
     // Проверяем, есть ли флаг isDemo и не истек ли срок действия
     return (
@@ -118,8 +117,18 @@ export function isDemoToken(token: string | undefined | null): boolean {
       decodedData.exp > Math.floor(Date.now() / 1000)
     );
   } catch (error) {
-    console.error('Ошибка при проверке демо-токена:', error);
-    return false;
+    // Если простое декодирование не сработало, пробуем с decodeURIComponent
+    try {
+      const decodedData = JSON.parse(decodeURIComponent(atob(token)));
+      return (
+        decodedData.isDemo === true &&
+        decodedData.exp &&
+        decodedData.exp > Math.floor(Date.now() / 1000)
+      );
+    } catch (e) {
+      console.error('Ошибка при проверке демо-токена:', error);
+      return false;
+    }
   }
 }
 
@@ -130,10 +139,16 @@ export function getRoleFromDemoToken(token: string | undefined | null): string |
   if (!token) return null;
 
   try {
-    const decodedData = JSON.parse(decodeURIComponent(atob(token)));
+    const decodedData = JSON.parse(atob(token));
     return decodedData.role || null;
   } catch (error) {
-    console.error('Ошибка при получении роли из демо-токена:', error); 
-    return null;
+    // Если простое декодирование не сработало, пробуем с decodeURIComponent
+    try {
+      const decodedData = JSON.parse(decodeURIComponent(atob(token)));
+      return decodedData.role || null;
+    } catch (e) {
+      console.error('Ошибка при получении роли из демо-токена:', error);
+      return null;
+    }
   }
 } 
