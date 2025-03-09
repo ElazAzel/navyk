@@ -5,8 +5,11 @@ const nextConfig = {
   swcMinify: true,
   images: {
     domains: [],
-    remotePatterns: []
-  }
+    remotePatterns: [],
+    unoptimized: true
+  },
+  // Настройка для правильной работы на Vercel
+  output: 'standalone'
 }
 
 module.exports = nextConfig
