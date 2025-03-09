@@ -156,7 +156,7 @@ export default function Home() {
           </motion.div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <AnimatedDemoCard 
+            <AnimatedDemoCard
               index={0}
               icon={<UserIcon className="w-6 h-6" />}
               title="Интерфейс студента"
@@ -165,7 +165,7 @@ export default function Home() {
               color="from-blue-500 to-indigo-600"
               features={["Карьерная дорожная карта", "Рекомендации мероприятий", "Аналитика навыков"]}
             />
-            <AnimatedDemoCard 
+            <AnimatedDemoCard
               index={1}
               icon={<BuildingOfficeIcon className="w-6 h-6" />}
               title="Интерфейс работодателя"
@@ -174,7 +174,7 @@ export default function Home() {
               color="from-purple-500 to-pink-600"
               features={["Управление вакансиями", "Аналитика кандидатов", "Отчеты по найму"]}
             />
-            <AnimatedDemoCard 
+            <AnimatedDemoCard
               index={2}
               icon={<AcademicCapIcon className="w-6 h-6" />}
               title="Интерфейс университета"

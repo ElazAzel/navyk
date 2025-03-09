@@ -36,6 +36,7 @@ export default function DemoPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isLoading, setIsLoading] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   // Автоматическое перенаправление, если указан параметр роли
   useEffect(() => {
@@ -45,35 +46,49 @@ export default function DemoPage() {
     }
   }, [searchParams]);
 
+  const getRedirectUrl = (role: string): string => {
+    switch (role) {
+      case 'student':
+        return '/students/profile';
+      case 'employer':
+        return '/employers/dashboard';
+      case 'university':
+        return '/universities/dashboard';
+      case 'mentor':
+        return '/mentors/dashboard';
+      default:
+        return '/';
+    }
+  };
+
   const handleDemoAccess = (role: string) => {
-    setIsLoading(role);
-    console.log(`Начало создания демо-доступа для роли: ${role}`);
+    try {
+      setIsLoading(role);
+      setError(null);
+      console.log(`Начало создания демо-доступа для роли: ${role}`);
 
-    // Создаем демо-токен для выбранной роли
-    const demoToken = createDemoToken(role);
-    console.log(`Демо-токен создан: ${demoToken.substring(0, 20)}...`);
+      // Создаем демо-токен для выбранной роли
+      const demoToken = createDemoToken(role);
+      console.log(`Демо-токен создан: ${demoToken.substring(0, 20)}...`);
 
-    // Устанавливаем токен в cookie
-    setAuthToken(demoToken);
-    console.log(`Токен установлен в cookie`);
+      // Устанавливаем токен в cookie
+      setAuthToken(demoToken);
+      console.log(`Токен установлен в cookie`);
 
-    // Увеличиваем задержку перед редиректом до 2 секунд
-    console.log(`Ожидание перед перенаправлением...`);
-    setTimeout(() => {
-      let redirectUrl = '';
-      if (role === 'student') {
-        redirectUrl = '/students/profile';
-      } else if (role === 'employer') {
-        redirectUrl = '/employers/dashboard';
-      } else if (role === 'university') {
-        redirectUrl = '/universities/dashboard';
-      } else if (role === 'mentor') {
-        redirectUrl = '/mentors/dashboard';
-      }
-      
-      console.log(`Перенаправление на: ${redirectUrl}`);
-      router.push(redirectUrl);
-    }, 2000); // Увеличиваем задержку до 2 секунд
+      // Получаем URL для перенаправления
+      const redirectUrl = getRedirectUrl(role);
+      console.log(`Ожидание перед перенаправлением на ${redirectUrl}...`);
+
+      // Увеличиваем задержку перед редиректом до 2 секунд
+      setTimeout(() => {
+        console.log(`Перенаправление на: ${redirectUrl}`);
+        router.push(redirectUrl);
+      }, 2000);
+    } catch (error) {
+      console.error("Ошибка при создании демо-доступа:", error);
+      setError(`Произошла ошибка при создании демо-доступа. Пожалуйста, попробуйте снова.`);
+      setIsLoading(null);
+    }
   };
 
   return (
@@ -86,6 +101,12 @@ export default function DemoPage() {
           <p className="text-xl text-gray-700 dark:text-gray-300">
             Выберите тип пользователя для демонстрации интерфейса
           </p>
+          
+          {error && (
+            <div className="mt-4 p-3 bg-red-100 text-red-800 rounded-lg">
+              {error}
+            </div>
+          )}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -116,7 +137,7 @@ export default function DemoPage() {
               </ul>
             </CardContent>
             <CardFooter>
-              <Button 
+              <Button
                 className="w-full"
                 onClick={() => handleDemoAccess('student')}
                 disabled={isLoading !== null}
